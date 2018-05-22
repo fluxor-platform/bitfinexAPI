@@ -1,0 +1,22 @@
+{
+  "name": "bitfinex-ea",
+  "version": "0.0.1",
+  "description": "a bitfinex EA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "a",
+    "bitfinex",
+    "trading",
+    "EA"
+  ],
+  "author": "TrungTA",
+  "license": "ISC",
+  "dependencies": {
+    "bitfinex-api-node": "^2.0.0-beta.1",
+    "cli-table2": "^0.2.0",
+    "express": "^4.16.3"
+  }
+}
