@@ -24,3 +24,23 @@
 // })
 
 // module.exports = bfx
+
+const BFX = require('bitfinex-api-node');
+
+// const API_KEY = '';
+// const API_SECRET = '';
+
+
+export function authentication(API_KEY, API_SECRET) {
+    return new BFX({
+        apiKey: API_KEY,
+        apiSecret: API_SECRET,
+
+        ws: {
+            autoReconnect: true,
+            seqAudit: true,
+            packetWDDelay: 10 * 1000
+        }
+    });
+}
+

@@ -3,81 +3,60 @@ var http = require('http');
 const BFX = require('bitfinex-api-node');
 const debug = require('debug')('bfx:examples:ws2_auth');
 
+const auth = require('./auth');
 // const request = require('request');
 // const crypto = require('crypto');
 // const Table = require('cli-table2')
 
-const API_KEY = '';
-const API_SECRET = '';
+const API_KEY = '123';
+const API_SECRET = '456';
 
+const bfx = auth.authentication(API_KEY, API_SECRET);
 
-const bfx = new BFX({
-  apiKey: API_KEY,
-  apiSecret: API_SECRET,
+console.log(bfx);
 
-  ws: {
-    autoReconnect: true,
-    seqAudit: true,
-    packetWDDelay: 10 * 1000
-  }
-});
-const Order = BFX.Models.Order;
+// const Order = BFX.Models.Order;
 
-// REST API
-const rest = bfx.rest(2, { transform: true });
+// // REST API
+// const rest = bfx.rest(2, { transform: true });
 
-// WEBSOCKET API
-const ws = bfx.ws();
+// // WEBSOCKET API
+// const ws = bfx.ws();
 
-function returnOrders() {
-  // rest.positions((err, res) => {
-  //     if (err) console.log(err);
-  //     console.log(res);
-  // })
+// function returnOrders() {
 
+//   ws.on('error', (err) => console.log(err))
+//   ws.on('open', ws.auth.bind(ws))
 
-  ws.on('error', (err) => console.log(err))
-  ws.on('open', ws.auth.bind(ws))
+//   ws.once('auth', () => {
+//     const o = new Order({
+//       cid: Date.now(),
+//       symbol: 'tETHUSD',
+//       amount: 0.05,
+//       type: Order.type.MARKET
+//     }, ws)
 
-  ws.once('auth', () => {
-    const o = new Order({
-      cid: Date.now(),
-      symbol: 'tETHUSD',
-      amount: 0.05,
-      type: Order.type.MARKET
-    }, ws)
+//     // Enable automatic updates
+//     o.registerListeners()
 
-    // Enable automatic updates
-    o.registerListeners()
+//     o.on('update', () => {
+//       console.log(`order updated: ${o.serialize()}`)
+//     })
 
-    o.on('update', () => {
-      console.log(`order updated: ${o.serialize()}`)
-    })
+//     o.on('close', () => {
+//       console.log(`order closed: ${o.status}`)
+//       ws.close()
+//     })
 
-    o.on('close', () => {
-      console.log(`order closed: ${o.status}`)
-      ws.close()
-    })
+//     o.submit().then(() => {
+//       console.log(`submitted order ${o.id}`)
+//     }).catch((err) => {
+//       console.error(err)
+//       ws.close()
+//     })
+//   })
 
-    o.submit().then(() => {
-      console.log(`submitted order ${o.id}`)
-    }).catch((err) => {
-      console.error(err)
-      ws.close()
-    })
-  })
+//   ws.open()
 
-  ws.open()
-
-}
-//
-// 
-http.createServer(function (req, res) {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  // authentication();
-  returnOrders();
-  console.log('listen to port: 8080');
-
-}).listen(8080);
-
+// }
 

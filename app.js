@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
-
+var ea = require('./server/ea');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get('/', function (req, res) {
