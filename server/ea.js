@@ -13,15 +13,15 @@ const API_SECRET = '456';
 
 const bfx = auth.authentication(API_KEY, API_SECRET);
 
-console.log(bfx);
 
-// const Order = BFX.Models.Order;
 
-// // REST API
-// const rest = bfx.rest(2, { transform: true });
+const Order = BFX.Models.Order;
 
-// // WEBSOCKET API
-// const ws = bfx.ws();
+// REST API
+const rest = bfx.rest(2, { transform: true });
+
+// WEBSOCKET API
+const ws = bfx.ws();
 
 // function returnOrders() {
 

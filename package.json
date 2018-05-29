@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "a bitfinex EA",
   "main": "index.js",
-  "scripts": {
-    "start" : "babel-node app.js --presets es2015"
-  },
+  "scripts": {},
   "keywords": [
     "a",
     "bitfinex",
@@ -18,11 +16,7 @@
     "bitfinex-api-node": "^2.0.0-beta.1",
     "body-parser": "^1.18.3",
     "cli-table2": "^0.2.0",
-    "express": "^4.16.3"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-es2015": "^6.24.1"
+    "express": "^4.16.3",
+    "request": "^2.87.0"
   }
 }

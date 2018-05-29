@@ -9,29 +9,99 @@
 </head>
 
 <body>
-    <div>
-        <p>bitfinex API</p>
-    </div>
-    <div style="display: flex">
-        <div class="info">
-            <div>
-                <h4>Average price is:</h4>
-                <p></p>
+    <div id="app">
+        <div>
+            <p>bitfinex API</p>
+        </div>
+        <div class="flex" style="width: 1000px; justify-content: space-between">
+            <div class="coin-info">
+                <div class="flex">
+                    <h4>Symbol</h4>
+                    <p id="symbol"></p>
+                </div>
+                <div class="flex">
+                    <h4>Price</h4>
+                    <p id="price"></p>
+                </div>
+                <div class="flex">
+                    <h4>Bitfinex Price</h4>
+                    <p id="bitprice"></p>
+                </div>
+            </div>
+            <div class="parameter">
+                <form id="submitform">
+                    <div>
+                        <label for="apikey">APIKey</label>
+                        <input type="text" name="apikey">
+                    </div>
+                    <div>
+                        <label for="apisecret">APISecret</label>
+                        <input type="text" name="apisecret">
+                    </div>
+                    <div>
+                        <label for="percentage">difference</label>
+                        <input type="number" name="percentage">
+                    </div>
+                    <div>
+                        <input type="submit" id="submit" value="Submit">
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="parameter">
-            <form action="">
-    
-            </form>
-        </div>
     </div>
 
 
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script> -->
-    <!-- <script src="index.js"></script> -->
-    <script src="/public/libs/vuejs.vue.js"></script>
-    <script src="/public/js/index.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- <script type="text/javascript" src="./index.js"></script> -->
+    <script type="text/javascript">        
+        $(document).ready(function () {
+            function getPrice() {
+                var url = 'https://api.coinmarketcap.com/v2/ticker/1/'
+                $.getJSON(url, function (data) {
+                    var symbol = data.data.symbol;
+                    var price = data.data.quotes.USD.price;
+                    $('#symbol').html(symbol);
+                    $('#price').html(price);
+                })
+            }
+            var intervalPrice = null;
+            $('#submitform').submit(function (e) {
+                e.preventDefault();
+
+                // take price loop
+                if (!intervalPrice) {
+                    intervalPrice = setInterval(getPrice(), 2000)
+                } else {
+                    clearInterval(intervalPrice);
+                    intervalPrice = null;
+                }
+
+                var formDataVar = $(this).serialize();
+                console.log(formDataVar);
+                $.ajax({
+                    type: 'POST',
+                    data: formDataVar,
+                    dataType: 'json',
+                    url: '/submit'
+                }).done(res => {
+                    console.log(res);
+                })
+            })
+        })
+    </script>
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        #submit {
+            margin-top: 20px;
+            width: 100px;
+            height: 50px;
+        }
+    </style>
 </body>
 
 </html>
