@@ -16,13 +16,8 @@ router.post('/', function (req, res) {
     // REST API
     const rest = bfx.rest(2, { transform: true });
 
-    var bitPrice = {};
-
-    rest.ticker('tBTCUSD', function (err, res, body) {
-        bitPrice.bid = res.bid;
-        bitPrice.ask = res.ask;
-    }).then(function () {
-        res.send(JSON.stringify(bitPrice));
+    rest.ticker('tBTCUSD', function (err, response, body) {
+        res.send(JSON.stringify(response));
     })
 })
 

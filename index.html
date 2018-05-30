@@ -53,7 +53,7 @@
                         <input type="number" name="percentage" id="percentage">
                     </div>
                     <div>
-                        <input type="" id="submit" name="Submit" value="start">
+                        <input type="submit" id="submit" name="Submit" value="start">
                     </div>
                     <div>
                         <label for="timer">timer</label>
@@ -104,15 +104,14 @@
             }
 
             // ajax post form
-            function ajaxForm(data, url) {
-                $.ajax({
+            async function ajaxForm(data, url) {
+                return await $.ajax({
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json',
                     url: url
-                }).done(res => {
-                    console.log(res);
-                    return res;
+                }).done(async function (response) {
+                    return response;
                 })
             }
 
@@ -135,11 +134,16 @@
                     $('input:not(#submit)').prop('disabled', true);
                     var data = {};
                     takeData($(this), data);
-                    console.log(JSON.stringify(data));
+                    // console.log(JSON.stringify(data));
 
                     switcher = setInterval(function () {
                         coinCapPrice = getPrice();
-                        bitPrice = ajaxForm(data, '/submit');
+                        bitPrice = ajaxForm(data, '/submit').then(result => {
+                            var a = JSON.parse(result);
+                            return { bid: a.bid, ask: a.ask };
+                        })
+                        console.log(bitPrice);
+                        console.log(coinCapPrice.price);
                     }, timer);
 
 
