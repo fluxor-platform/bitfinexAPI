@@ -13,8 +13,7 @@ module.exports = {
                 packetWDDelay: 10 * 1000
             }
         });
-    },
-
+    }
 }
 
 

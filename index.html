@@ -25,25 +25,39 @@
                 </div>
                 <div class="flex">
                     <h4>Bitfinex Price</h4>
-                    <p id="bitprice"></p>
+                    <div>
+                        <span>Bid</span>
+                        <span id="bid"></span>
+                    </div>
+                    <div>
+                        <span>Ask</span>
+                        <span id="ask"></span>
+                    </div>
                 </div>
+            </div>
+            <div>
+                <button id="autotrade">Start Trading!</button>
             </div>
             <div class="parameter">
                 <form id="submitform">
                     <div>
                         <label for="apikey">APIKey</label>
-                        <input type="text" name="apikey">
+                        <input type="text" name="apikey" id="apikey">
                     </div>
                     <div>
                         <label for="apisecret">APISecret</label>
-                        <input type="text" name="apisecret">
+                        <input type="text" name="apisecret" id="apisecret">
                     </div>
                     <div>
                         <label for="percentage">difference</label>
-                        <input type="number" name="percentage">
+                        <input type="number" name="percentage" id="percentage">
                     </div>
                     <div>
-                        <input type="submit" id="submit" value="Submit">
+                        <input type="" id="submit" name="Submit" value="start">
+                    </div>
+                    <div>
+                        <label for="timer">timer</label>
+                        <input type="number" name="timer" id="timer">
                     </div>
                 </form>
             </div>
@@ -57,37 +71,92 @@
     <!-- <script type="text/javascript" src="./index.js"></script> -->
     <script type="text/javascript">        
         $(document).ready(function () {
+            // get price from marketcap
             function getPrice() {
+                var obj = {};
                 var url = 'https://api.coinmarketcap.com/v2/ticker/1/'
                 $.getJSON(url, function (data) {
-                    var symbol = data.data.symbol;
-                    var price = data.data.quotes.USD.price;
+                    obj.symbol = data.data.symbol;
+                    obj.price = data.data.quotes.USD.price;
                     $('#symbol').html(symbol);
                     $('#price').html(price);
                 })
+                return obj;
             }
-            var intervalPrice = null;
-            $('#submitform').submit(function (e) {
-                e.preventDefault();
-
-                // take price loop
-                if (!intervalPrice) {
-                    intervalPrice = setInterval(getPrice(), 2000)
-                } else {
-                    clearInterval(intervalPrice);
-                    intervalPrice = null;
+            // validate submitform
+            function validateForm(form) {
+                var formArr = form[0];
+                for (var i = 0; i < formArr.length; i++) {
+                    if (formArr[i].value == "") {
+                        return true;
+                    }
                 }
+                return false;
+            }
 
-                var formDataVar = $(this).serialize();
-                console.log(formDataVar);
+            // prepare JSON data
+            function takeData(form, dataObj) {
+                var formArr = form[0];
+                for (var i = 0; i < formArr.length; i++) {
+                    var eKey = formArr[i];
+                    dataObj[`${eKey.name}`] = `${eKey.value}`;
+                }
+            }
+
+            // ajax post form
+            function ajaxForm(data, url) {
                 $.ajax({
                     type: 'POST',
-                    data: formDataVar,
-                    dataType: 'json',
-                    url: '/submit'
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: url
                 }).done(res => {
                     console.log(res);
+                    return res;
                 })
+            }
+
+
+            var switcher = null;
+            var coinCapPrice, bitPrice;
+
+            $('#submitform').submit(function (e) {
+                e.preventDefault();
+                var timer = Number($('#timer').val()) * 1000;
+
+                // validate
+                if (validateForm($(this))) {
+                    return;
+                }
+
+
+                if (!switcher) {
+
+                    $('input:not(#submit)').prop('disabled', true);
+                    var data = {};
+                    takeData($(this), data);
+                    console.log(JSON.stringify(data));
+
+                    switcher = setInterval(function () {
+                        coinCapPrice = getPrice();
+                        bitPrice = ajaxForm(data, '/submit');
+                    }, timer);
+
+
+                } else {
+                    clearInterval(switcher);
+                    switcher = null;
+                    $('input:not(#submit)').prop('disabled', false);
+                }
+
+
+                // take price loop
+                // var data = {};
+                // takeData($(this), data);
+                // console.log(JSON.stringify(data));
+                // ajaxForm(data, '/submit');
+
+
             })
         })
     </script>

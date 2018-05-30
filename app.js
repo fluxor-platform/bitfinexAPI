@@ -5,16 +5,17 @@ var bodyParser = require('body-parser');
 var path = require('path');
 // var ea = require('./server/ea');
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '4000mb' }));
 
 app.get('/', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 })
 
-app.post('/submit', function (req, res) {
-  res.send(JSON.stringify(req.body));
-  console.log(JSON.stringify(req.body));
-})
+var ea = require('./server/router/ea');
+
+app.use('/submit', ea);
+
 
 app.listen(3000, function () {
   console.log('listen to port 3000')

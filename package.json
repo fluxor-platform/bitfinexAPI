@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "a bitfinex EA",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node app"
+  },
   "keywords": [
     "a",
     "bitfinex",

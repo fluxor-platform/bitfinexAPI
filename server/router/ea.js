@@ -1,27 +1,50 @@
+var express = require('express');
+var router = express.Router();
+var path = require('path');
 
-var http = require('http');
+
 const BFX = require('bitfinex-api-node');
-const debug = require('debug')('bfx:examples:ws2_auth');
-
 const auth = require('./auth');
+
+router.post('/', function (req, res) {
+    var API_KEY = req.body.apikey;
+    var API_SECRET = req.body.apisecret;
+
+    // validate API
+    const bfx = auth.authentication(API_KEY, API_SECRET);
+
+    // REST API
+    const rest = bfx.rest(2, { transform: true });
+
+    var bitPrice = {};
+
+    rest.ticker('tBTCUSD', function (err, res, body) {
+        bitPrice.bid = res.bid;
+        bitPrice.ask = res.ask;
+    }).then(function () {
+        res.send(JSON.stringify(bitPrice));
+    })
+})
+
+module.exports = router;
 // const request = require('request');
 // const crypto = require('crypto');
 // const Table = require('cli-table2')
 
-const API_KEY = '123';
-const API_SECRET = '456';
+// const API_KEY = '123';
+// const API_SECRET = '456';
 
-const bfx = auth.authentication(API_KEY, API_SECRET);
+// const bfx = auth.authentication(API_KEY, API_SECRET);
 
 
 
-const Order = BFX.Models.Order;
+// const Order = BFX.Models.Order;
 
-// REST API
-const rest = bfx.rest(2, { transform: true });
+// // REST API
+// const rest = bfx.rest(2, { transform: true });
 
-// WEBSOCKET API
-const ws = bfx.ws();
+// // WEBSOCKET API
+// const ws = bfx.ws();
 
 // function returnOrders() {
 
