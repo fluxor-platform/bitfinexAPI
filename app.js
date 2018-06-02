@@ -12,9 +12,11 @@ app.get('/', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 })
 
-var ea = require('./server/router/ea');
+var price = require('./server/router/price');
+var market = require('./server/router/market');
 
-app.use('/submit', ea);
+app.use('/price', price);
+app.use('/market', market);
 
 
 app.listen(3000, function () {

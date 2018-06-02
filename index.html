@@ -62,6 +62,8 @@
                 </form>
             </div>
         </div>
+
+        <div class="positions"></div>
     </div>
 
 
@@ -138,12 +140,26 @@
 
                     switcher = setInterval(function () {
                         coinCapPrice = getPrice();
-                        bitPrice = ajaxForm(data, '/submit').then(result => {
-                            var a = JSON.parse(result);
-                            return { bid: a.bid, ask: a.ask };
+                        bitPrice = ajaxForm(data, '/price')
+                        .then(result => {
+                            var bitfinexJSON = JSON.parse(result);
+                            var percentage = Number($('#percentage').val());
+                            
+                            // coinMarketCapPrice average
+                            var average = coinCapPrice.price;
+
+                            // var lowestPrice = bitfinexJSON.bid * (1 - 0.01 * percentage);
+                            // var hightPrice = bitfinexJSON.ask * (1 + 0.01 * percentage);
+                            
+                            // not sure about strategy
+                            // if(average < lowestPrice || average > hightPrice){
+                                checkingMarket = ajaxForm(data, '/market')
+                                .then(data => {
+                                    console.log(JSON.parse(data));
+                                })
+                            // }
                         })
-                        console.log('bitfinex price:', bitPrice);
-                        console.log('coin Market Cap price:', coinCapPrice);
+
                     }, timer);
 
 
