@@ -1,0 +1,9 @@
+.flex {
+    display: flex;
+}
+
+#submit {
+    margin-top: 20px;
+    width: 100px;
+    height: 50px;
+}

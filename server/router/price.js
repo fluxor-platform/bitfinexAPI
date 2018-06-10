@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
 
-
-const BFX = require('bitfinex-api-node');
 const auth = require('./auth');
 
 router.post('/', function (req, res) {
@@ -16,7 +13,7 @@ router.post('/', function (req, res) {
     // REST API
     const rest = bfx.rest(2, { transform: true });
 
-    rest.ticker('tBTCUSD', function (err, response, body) {
+    rest.ticker('tBTCUSD', function (err, response) {
         res.send(JSON.stringify(response));
     })
 })
