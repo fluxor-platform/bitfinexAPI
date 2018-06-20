@@ -6,7 +6,6 @@ const BFX = require('bitfinex-api-node');
 const auth = require('./auth');
 
 router.post('/', async function (req, res) {
-    console.log(req);
 
     var API_KEY = req.body.apikey;
     var API_SECRET = req.body.apisecret;

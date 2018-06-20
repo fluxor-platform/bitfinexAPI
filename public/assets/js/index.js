@@ -47,25 +47,22 @@ var app = new Vue({
                 for (let i = 0; i < this.postData.length; i++) {
                     data[`${this.postData[i].label}`] = `${this.postData[i].value}`;
                 }
-                console.log(data);
                 if (!this.run) {
                     var self = this;
                     this.run = setInterval(function () {
                         self.getPrice()
-                        .then(res => {
-                            self.coinMarketSymbol = res.symbol;
-                            self.coinMarketPrice = res.price;
-                        })
+                            .then(res => {
+                                self.coinMarketSymbol = res.symbol;
+                                self.coinMarketPrice = res.price;
+                            })
 
                         axios({
                             method: 'post',
-                            data: JSON.stringify(data),
+                            data: data,
                             url: '/market'
                         })
                             .then(function (res) {
                                 console.log(res);
-                                // self.price = res.price;
-                                // self.positions = res.positions;
                             })
                             .catch(err => {
                                 console.log(err);
