@@ -11,6 +11,6 @@
     display: none;
     color: red;
 }
-.warning.negative{
+.warning.validate{
     display: inline-block;
 }

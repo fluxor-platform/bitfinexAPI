@@ -14,12 +14,9 @@ app.get('/', function (req, res) {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 })
 
-var price = require('./server/router/price');
 var market = require('./server/router/market');
 
-app.use('/price', price);
 app.use('/market', market);
-
 
 app.listen(3000, function () {
   console.log('listen to port 3000')

@@ -1,46 +1,78 @@
 var app = new Vue({
     el: '#app',
     data: {
-        run: false,
+        coinMarketSymbol: '',
+        coinMarketPrice: 0,
+        price: {},
+        positions: {},
+        run: null,
         postData: [
-            { apikey: null },
-            { apisecret: null },
-            { percentage: null }
-        ]
+            {
+                label: 'apikey',
+                value: null
+            },
+            {
+                label: 'apisecret',
+                value: null
+            },
+            {
+                label: 'percentage',
+                value: null
+            }
+        ],
+        loop: 0
     },
     methods: {
         getPrice: function () {
             var url = 'https://api.coinmarketcap.com/v2/ticker/1/';
-            axios.get(url)
+            // var url = '/test';
+            return axios.get(url)
                 .then(function (res) {
-                    console.log(res);
+                    return {
+                        symbol: res.data.data.symbol,
+                        price: res.data.data.quotes.USD.price
+                    }
                 })
                 .catch(function (err) {
-                    console.log(err);
+                    return {
+                        err: err
+                    }
                 })
-        },
-        validateForm: function () {
-            for (var i = 0; i < postData.length; i++) {
-                if (postData[i].value == "") {
-                    return true;
-                }
-            }
-            return false;
         },
         postAjax: function () {
             // validate
-            var validate = validateForm();
+            var validate = !this.postData[0].value && !this.postData[1].value && !this.postData[2].value;
+            if (!validate) {
+                var data = {};
+                for (let i = 0; i < this.postData.length; i++) {
+                    data[`${this.postData[i].label}`] = `${this.postData[i].value}`;
+                }
+                console.log(data);
+                if (!this.run) {
+                    var self = this;
+                    this.run = setInterval(function () {
+                        self.getPrice()
+                        .then(res => {
+                            self.coinMarketSymbol = res.symbol;
+                            self.coinMarketPrice = res.price;
+                        })
 
-            var data = {};
-            for (let i = 0; i < postData.length; i++) {
-                data[`${postData[i].label}`] = `${postData[i].value}`;
+                        axios({
+                            method: 'post',
+                            data: JSON.stringify(data),
+                            url: '/market'
+                        })
+                            .then(function (res) {
+                                console.log(res);
+                                // self.price = res.price;
+                                // self.positions = res.positions;
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }, this.loop * 1000)
+                }
             }
-
-            axios({
-                method: 'post',
-                data: JSON.stringify(data),
-                url: '/price'
-            })
         }
     }
 })

@@ -18,11 +18,11 @@
             <div class="coin-info">
                 <div class="flex">
                     <h4>Symbol</h4>
-                    <p id="symbol"></p>
+                    <p id="symbol">{{coinMarketSymbol}}</p>
                 </div>
                 <div class="flex">
                     <h4>Price</h4>
-                    <p id="price"></p>
+                    <p id="price">{{coinMarketPrice}}</p>
                 </div>
                 <div class="flex">
                     <h4>Bitfinex Price</h4>
@@ -40,28 +40,28 @@
                 <button id="autotrade">Start Trading!</button>
             </div>
             <div class="parameter">
-                <form id="submitform">
+                <form id="submitform" @submit.prevent="postAjax">
                     <div>
                         <label for="apikey">APIKey</label>
-                        <input type="text" name="apikey" v-model="postData[0].apikey">
-                        <p class="warning" v-bind:class="[postData[0].apikey == '' ? 'negative' : '']">Required!</p>
+                        <input type="text" name="apikey" v-model="postData[0].value" :disabled="run">
+                        <p class="warning" :class="[postData[0].value == '' ? 'validate' : '']">Required!</p>
                     </div>
                     <div>
                         <label for="apisecret">APISecret</label>
-                        <input type="text" name="apisecret" v-model="postData[0].apisecret">
-                        <p class="warning" v-bind:class="[postData[0].apisecret == '' ? 'negative' : '']">Required!</p>
+                        <input type="text" name="apisecret" v-model="postData[1].value" :disabled="run">
+                        <p class="warning" :class="[postData[1].value == '' ? 'validate' : '']">Required!</p>
                     </div>
                     <div>
                         <label for="percentage">difference</label>
-                        <input type="number" name="percentage" v-model="postData[0].percentage">
-                        <p class="warning" v-bind:class="[postData[0].percentage == '' ? 'negative' : '']">Required!</p>
-                    </div>
-                    <div>
-                        <input type="submit" id="submit" name="Submit" value="start">
+                        <input type="number" name="percentage" v-model="postData[2].value" :disabled="run">
+                        <p class="warning" :class="[postData[2].value == '' ? 'validate' : '']">Required!</p>
                     </div>
                     <div>
                         <label for="timer">timer</label>
-                        <input type="number" name="timer" id="timer">
+                        <input type="number" name="timer" id="timer" :disabled="run" v-model="loop">
+                    </div>
+                    <div>
+                        <input type="submit" id="submit" name="Submit" value="start">
                     </div>
                 </form>
             </div>
@@ -69,7 +69,7 @@
 
         <div class="positions"></div>
         <div>
-            <button style="width:100px;height:100px"></button>
+            <!-- <button style="width:100px;height:100px" @click="testGet"></button> -->
         </div>
     </div>
 
@@ -77,9 +77,6 @@
     <script type="text/javascript" src="/libs/vuejs/vue.js"></script>
     <script type="text/javascript" src="/libs/axios/axios.js"></script>
     <script type="text/javascript" src="/assets/js/index.js"></script>
-    <!-- <script type="text/javascript">        
-
-    </script> -->
 </body>
 
 </html>
